@@ -1,9 +1,10 @@
 import torch
 import torch.nn as nn
-from collections import OrderedDict
 
 
 class Flatten(nn.Module):
+    """Flatten incoming tensors
+    """
     def __init__(self):
         super(Flatten, self).__init__()
     
@@ -12,6 +13,10 @@ class Flatten(nn.Module):
 
 
 def init_weights(m):
+    """Inplace xavier uniform initialisation with zero bias for conv and linear layers
+
+    :param m: The layer to initialise
+    """
     if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
         torch.nn.init.xavier_uniform_(m.weight)
         torch.nn.init.zeros_(m.bias)
@@ -21,6 +26,10 @@ class BaselineModel(nn.Module):
     """
     Parameterised implemention of the retina-net - ventral stream architecture.
     Note that the last layer does not have an explicit softmax and will thus output the logits
+
+    :param n_bn: Number of filters in the bottleneck layer
+    :param d_vvs: Depth (nuymber of layers) of the ventral part of the model
+    :param n_inch: Number of input channels
     """
     def __init__(self, n_bn, d_vvs, n_inch=1):
         super(BaselineModel, self).__init__()
@@ -83,6 +92,8 @@ class BaselineModel(nn.Module):
 
 
 if __name__ == '__main__':
+    """Train a single mpodel to test
+    """
     import torchvision.transforms as transforms
     from torchbearer import Trial
     import torchbearer

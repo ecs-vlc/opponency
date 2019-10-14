@@ -1,5 +1,5 @@
 import torch
-import math
+
 
 def make_grating(freq, theta, phase, sz=(32, 32)):
     if not torch.is_tensor(theta):

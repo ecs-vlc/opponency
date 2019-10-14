@@ -1,3 +1,6 @@
+"""
+Train models in CIELAB space
+"""
 from training.model import BaselineModel
 import torchvision.transforms as transforms
 from torchbearer import Trial
@@ -8,56 +11,37 @@ from torch import optim
 from torch.utils.data import DataLoader
 from torchvision.datasets import CIFAR10
 import pathlib
+import numpy as np
+from skimage import color
 
 bottlenecks = [1, 2, 4, 8, 16, 32]
 ventral_depths = [0, 1, 2, 3, 4]
 n_trials = 10
-cmode='colour-lab'
+cmode = 'colour-lab'
 
-if cmode == 'grey':
-    nch = 1
-    train_transform = transforms.Compose([
-        transforms.Grayscale(),
-        transforms.RandomAffine(0, translate=(0.1, 0.1)),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor()  # convert to tensor
-    ])
-    test_transform = transforms.Compose([
-        transforms.Grayscale(),
-        transforms.ToTensor()  # convert to tensor
-    ])
-else:
-    nch = 3
+nch = 3
 
-    import numpy as np
-    from skimage import color
 
-    # srgb_profile = ImageCms.createProfile("sRGB")
-    # lab_profile = ImageCms.createProfile("LAB")
-    #
-    # rgb2lab_transform = ImageCms.buildTransformFromOpenProfiles(srgb_profile, lab_profile, "RGB", "LAB")
+def to_lab(image):
+    image = np.array(image, np.float32, copy=False) / 255.
+    image = color.rgb2lab(image)
+    image = torch.from_numpy(image).float()
 
-    def to_lab(image):
-        image = np.array(image, np.float32, copy=False) / 255.
-        image = color.rgb2lab(image)
-        image = torch.from_numpy(image).float()
+    image = image.view(32, 32, 3)
+    # put it from HWC to CHW format
+    # yikes, this transpose takes 80% of the loading time/CPU
+    image = image.transpose(0, 1).transpose(0, 2).contiguous()
+    return image.float().div(100)
 
-        image = image.view(32, 32, 3)
-        # put it from HWC to CHW format
-        # yikes, this transpose takes 80% of the loading time/CPU
-        image = image.transpose(0, 1).transpose(0, 2).contiguous()
-        return image.float().div(100)
 
-    train_transform = transforms.Compose([
-        transforms.RandomAffine(0, translate=(0.1, 0.1)),
-        transforms.RandomHorizontalFlip(),
-        to_lab
-        # transforms.ToTensor()  # convert to tensor
-    ])
-    test_transform = transforms.Compose([
-        to_lab
-        # transforms.ToTensor()  # convert to tensor
-    ])
+train_transform = transforms.Compose([
+    transforms.RandomAffine(0, translate=(0.1, 0.1)),
+    transforms.RandomHorizontalFlip(),
+    to_lab
+])
+test_transform = transforms.Compose([
+    to_lab
+])
 
 # load data
 trainset = CIFAR10(".", train=True, download=True, transform=train_transform)

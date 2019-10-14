@@ -1,3 +1,6 @@
+"""
+Train models with input channels shuffled
+"""
 from training.model import BaselineModel
 import torchvision.transforms as transforms
 from torchbearer import Trial
@@ -12,30 +15,17 @@ import pathlib
 bottlenecks = [1, 2, 4, 8, 16, 32]
 ventral_depths = [0, 1, 2, 3, 4]
 n_trials = 10
-cmode='colour'
+cmode = 'colour'
 
-if cmode == 'grey':
-    nch = 1
-    train_transform = transforms.Compose([
-        transforms.Grayscale(),
-        transforms.RandomAffine(0, translate=(0.1, 0.1)),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor()  # convert to tensor
-    ])
-    test_transform = transforms.Compose([
-        transforms.Grayscale(),
-        transforms.ToTensor()  # convert to tensor
-    ])
-else:
-    nch = 3
-    train_transform = transforms.Compose([
-        transforms.RandomAffine(0, translate=(0.1, 0.1)),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor()  # convert to tensor
-    ])
-    test_transform = transforms.Compose([
-        transforms.ToTensor()  # convert to tensor
-    ])
+nch = 3
+train_transform = transforms.Compose([
+    transforms.RandomAffine(0, translate=(0.1, 0.1)),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor()  # convert to tensor
+])
+test_transform = transforms.Compose([
+    transforms.ToTensor()  # convert to tensor
+])
 
 # load data
 trainset = CIFAR10(".", train=True, download=True, transform=train_transform)
@@ -65,7 +55,6 @@ for n_bn in bottlenecks:
             def shuffle(state):
                 img = state[torchbearer.X]
                 x = img.permute(0, 2, 3, 1)
-                # x = torch.stack([x[i, :, :, torch.randperm(x.size(3))] for i in range(x.size(0))], dim=0)
                 x = x[:, :, :, torch.randperm(x.size(3))]
                 state[torchbearer.X] = x.view(img.size(0), img.size(2), img.size(3), img.size(1)).permute(0, 3, 1, 2)
 

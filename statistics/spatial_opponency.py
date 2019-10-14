@@ -8,7 +8,6 @@ grating_params = []
 for theta in np.arange(0, 2*np.pi, np.pi / 18):
     for phase in np.arange(0, np.pi, np.pi / 12):
         for freq in range(16):
-            # grating = (make_grating_rg(freq, theta, phase)).unsqueeze(0).permute(0, 3, 2, 1)
             grating = (make_grating(freq, theta, phase)).unsqueeze(2).repeat(1, 1, 3).unsqueeze(0).permute(0, 3, 2, 1)
             gratings.append(grating)
             grating_params.append({'freq': freq, 'theta': theta, 'phase': phase})
@@ -17,23 +16,10 @@ gratings.requires_grad = False
 gratings_list = gratings.chunk(int(gratings.size(0) / 128.))
 
 
-rg_gratings = []
-rg_grating_params = []
-for theta in np.arange(0, 2*np.pi, np.pi / 18):
-    for phase in np.arange(0, np.pi, np.pi / 12):
-        for freq in range(16):  # , 0.9, 0.8, 0.7, 0.6, 0.5]:  # , 0.3, 0.2, 0.1
-            rg_grating = (make_grating_rg(freq, theta, phase)).unsqueeze(0).permute(0, 3, 2, 1)
-            rg_gratings.append(rg_grating)
-            rg_grating_params.append({'freq': freq, 'theta': theta, 'phase': phase})
-rg_gratings = torch.cat(rg_gratings, dim=0)
-rg_gratings.requires_grad = False
-rg_gratings_list = rg_gratings.chunk(int(rg_gratings.size(0) / 128.))
+def gratingsExperiment(model, layer, featuremap_position=(16, 16), device='cpu', lab=True):
+    all_responses = {'grating_responses': {}, 'uniform_responses': {}, 'grating_params': grating_params}
 
-
-def gratingsExperiment(model, layer, featuremap_position=(16, 16), device='cpu', rg=False, lab=True):
-    all_responses = {'grating_responses': {}, 'uniform_responses': {}, 'grating_params': rg_grating_params if rg else grating_params}
-
-    g_list = rg_gratings_list if rg else gratings_list
+    g_list = gratings_list
 
     responses = []
     for i in range(len(g_list)):
@@ -60,8 +46,8 @@ def gratingsExperiment(model, layer, featuremap_position=(16, 16), device='cpu',
 
 
 @torch.no_grad()
-def gratingsExperimentStats(model, layer, featuremap_position=(16, 16), spontaneous_level=0, device='cpu', rg=False, lab=True):
-    data = gratingsExperiment(model, layer, featuremap_position, device=device, rg=rg, lab=lab)
+def gratingsExperimentStats(model, layer, featuremap_position=(16, 16), spontaneous_level=0, device='cpu', lab=True):
+    data = gratingsExperiment(model, layer, featuremap_position, device=device, lab=lab)
 
     spontaneous_rates = data['uniform_responses'][spontaneous_level]
     classes = [''] * spontaneous_rates.size(0)
@@ -97,12 +83,11 @@ def gratingsExperimentStats(model, layer, featuremap_position=(16, 16), spontane
 
 
 class SpatialOpponency(Meter):
-    def __init__(self, layers=None, rg=False, lab=True):
+    def __init__(self, layers=None, lab=True):
         if layers is None:
             layers = ['retina_relu2', 'ventral_relu0', 'ventral_relu1']
         super().__init__(['layer', 'cell', 'class', 'max_params', 'max', 'min_params', 'min', 'spontaneous_rate'])
         self.layers = layers
-        self.rg = rg
         self.lab = lab
 
     def compute(self, model, metadata, device):
@@ -112,7 +97,7 @@ class SpatialOpponency(Meter):
             if not model.has_layer(layer):
                 continue
 
-            classes, max_params, maxes, min_params, mins, spontaneous_rates = gratingsExperimentStats(model, layer, device=device, rg=self.rg, lab=self.lab)
+            classes, max_params, maxes, min_params, mins, spontaneous_rates = gratingsExperimentStats(model, layer, device=device, lab=self.lab)
             res[0] += [layer] * len(classes)
             res[1] += list(range(len(classes)))
             res[2] += classes

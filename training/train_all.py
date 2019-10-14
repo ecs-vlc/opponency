@@ -1,3 +1,6 @@
+"""
+Train models for full range of hyper-parameters and numbers of repeats in either greyscale or colour
+"""
 from training.model import BaselineModel
 import torchvision.transforms as transforms
 from torchbearer import Trial
@@ -9,10 +12,10 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import CIFAR10
 import pathlib
 
-bottlenecks = [1,2,4,8,16,32]
-ventral_depths = [0,1,2,3,4]
+bottlenecks = [1, 2, 4, 8, 16, 32]
+ventral_depths = [0, 1, 2, 3, 4]
 n_trials = 10
-cmode='grey'
+cmode = 'grey'
 
 if cmode == 'grey':
     nch = 1
@@ -65,4 +68,3 @@ for n_bn in bottlenecks:
             trial.with_generators(trainloader, val_generator=testloader)
             trial.run(epochs=20)
             torch.save(model.state_dict(), model_file)
-

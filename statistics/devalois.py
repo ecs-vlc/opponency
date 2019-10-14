@@ -2,7 +2,7 @@ import numpy as np
 import torch
 
 from statistics.meters import Meter
-from wavelength import hsl_to_rgb
+from .wavelength import hsl_to_rgb
 from skimage import color
 
 
