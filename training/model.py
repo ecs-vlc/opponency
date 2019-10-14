@@ -83,6 +83,16 @@ class BaselineModel(nn.Module):
                 return x
         return x
 
+    def retina_dict(self):
+        res = {}
+        for name, module in self.retina:
+            res[name] = module.state_dict()
+        return res
+
+    def load_retina_dict(self, retina_dict):
+        for name, module in self.retina:
+            module.load_state_dict(retina_dict[name])
+
     def forward(self, x):
         for name, module in self.retina:
             x = module(x)

@@ -6,7 +6,7 @@ from skimage import color
 gratings = []
 grating_params = []
 for theta in np.arange(0, 2*np.pi, np.pi / 18):
-    for phase in np.arange(0, np.pi, np.pi / 12):
+    for phase in np.arange(0, 2*np.pi, np.pi / 32):
         for freq in range(16):
             grating = (make_grating(freq, theta, phase)).unsqueeze(2).repeat(1, 1, 3).unsqueeze(0).permute(0, 3, 2, 1)
             gratings.append(grating)
@@ -16,7 +16,8 @@ gratings.requires_grad = False
 gratings_list = gratings.chunk(int(gratings.size(0) / 128.))
 
 
-def gratingsExperiment(model, layer, featuremap_position=(16, 16), device='cpu', lab=True):
+@torch.no_grad()
+def gratingsExperiment(model, layer, featuremap_position=(16, 16), device='cpu', lab=False):
     all_responses = {'grating_responses': {}, 'uniform_responses': {}, 'grating_params': grating_params}
 
     g_list = gratings_list
@@ -46,7 +47,7 @@ def gratingsExperiment(model, layer, featuremap_position=(16, 16), device='cpu',
 
 
 @torch.no_grad()
-def gratingsExperimentStats(model, layer, featuremap_position=(16, 16), spontaneous_level=0, device='cpu', lab=True):
+def gratingsExperimentStats(model, layer, featuremap_position=(16, 16), spontaneous_level=0, device='cpu', lab=False):
     data = gratingsExperiment(model, layer, featuremap_position, device=device, lab=lab)
 
     spontaneous_rates = data['uniform_responses'][spontaneous_level]
@@ -83,7 +84,7 @@ def gratingsExperimentStats(model, layer, featuremap_position=(16, 16), spontane
 
 
 class SpatialOpponency(Meter):
-    def __init__(self, layers=None, lab=True):
+    def __init__(self, layers=None, lab=False):
         if layers is None:
             layers = ['retina_relu2', 'ventral_relu0', 'ventral_relu1']
         super().__init__(['layer', 'cell', 'class', 'max_params', 'max', 'min_params', 'min', 'spontaneous_rate'])

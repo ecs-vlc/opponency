@@ -65,8 +65,7 @@ def deValoisExperiment(model, layer, featuremap_position=(16, 16), stepsize=10, 
     return all_responses
 
 
-def deValoisExperimentStats(model, layer, featuremap_position=(16, 16), stepsize=20,
-                            minWavelength=380, maxWavelength=750, brightnessModifier=[1, 1.5, 2], spontaneous_level=0, device='cpu', lab=True):
+def deValoisExperimentStats(model, layer, spontaneous_level=0, device='cpu', lab=False):
     """
     Generate classification for a single cell
     """
@@ -105,34 +104,10 @@ def deValoisExperimentStats(model, layer, featuremap_position=(16, 16), stepsize
         mins.append(val.item())
 
     return classes, max_params, maxes, min_params, mins, spontaneous_rates
-    # spontaneous_rate = data['uniform_responses'][spontaneous_level]
-    # for brightness, response in data['wavelength_responses'].items():
-    #     if torch.all(response == spontaneous_rate):
-    #         tc = 'spectrally unresponsive'
-    #     elif torch.all(response <= spontaneous_rate):
-    #         tc = 'spectrally non-opponent'
-    #         sc = 'inhibitors'
-    #     elif torch.all(response >= spontaneous_rate):
-    #         tc = 'spectrally non-opponent'
-    #         sc = 'excitators'
-    #     else:
-    #         tc = 'spectrally opponent'
-    #
-    #     if c == None:
-    #         c = tc
-    #     if c != tc and tc != 'spectrally unresponsive':
-    #         sc = "cell is inconsistent in luminance response"  # not expecting this to happen
-    #     if c != tc and c != 'spectrally unresponsive':
-    #         c = tc
-    #
-    # ur = np.array(list(data['uniform_responses'].values()))
-    # if ur.min() == ur.max():
-    #     sc = 'luminance unresponsive'
-    # return c, sc
 
 
 class DeValois(Meter):
-    def __init__(self, layers=None, lab=True):
+    def __init__(self, layers=None, lab=False):
         if layers is None:
             layers = ['retina_relu2', 'ventral_relu0', 'ventral_relu1']
         super().__init__(['layer', 'cell', 'class', 'max_params', 'max', 'min_params', 'min', 'spontaneous_rate'])
