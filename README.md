@@ -54,6 +54,26 @@ Accepted to the [NeurIPS 2019](https://neurips.cc/) workshop on [Shared Visual R
             </a>
         </td>
     </tr>
+        <tr>
+        <td rowspan="2">
+            <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/double_opponent.png" width="256">
+        </td>    
+        <td rowspan="2">
+            <b>Double Opponency:</b> Generating the double opponency figures from the paper.
+        </td>
+        <td align="center">
+            <a href="https://nbviewer.jupyter.org/github/ecs-vlc/opponency/blob/master/double_opponency.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/nbviewer_logo.svg" height="34">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <a href="https://github.com/ecs-vlc/opponency/blob/master/double_opponency.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/github_logo.png" height="32">
+            </a>
+        </td>
+    </tr>
 <!--     <tr>
         <td align="center">
             <a href="https://colab.research.google.com/github/pytorchbearer/torchbearer/blob/master/docs/_static/notebooks/svm_linear.ipynb">
