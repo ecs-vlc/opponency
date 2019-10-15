@@ -1,7 +1,3 @@
-# Spatial and Colour Opponency in Anatomically Constrained Deep Networks
-
-Ethan Harris ([@ethanwharris](https://github.com/ethanwharris)), Daniela Mihai ([@Ddaniela13](https://github.com/Ddaniela13)) and Jonathon Hare ([@jonhare](https://github.com/jonhare))
-
 <p align="center">
   <a href="./">ArXiv</a> •
   <a href="https://www.svrhm2019.com/">SVRHM</a> •
@@ -9,6 +5,10 @@ Ethan Harris ([@ethanwharris](https://github.com/ethanwharris)), Daniela Mihai (
   <a href="#notebooks">Notebooks</a> •
   <a href="./">Citing</a>
 </p>
+
+# Spatial and Colour Opponency in Anatomically Constrained Deep Networks
+
+Ethan Harris ([@ethanwharris](https://github.com/ethanwharris)), Daniela Mihai ([@Ddaniela13](https://github.com/Ddaniela13)) and Jonathon Hare ([@jonhare](https://github.com/jonhare))
 
 ## About
 
