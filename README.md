@@ -1,6 +1,8 @@
 # Spatial and Colour Opponency in Anatomically Constrained Deep Networks
 
-Accepted to the NeurIPS 2019 workshop, [Shared Visual Representations in Humans and Machines (SVRHM)](https://www.svrhm2019.com/)
+Ethan Harris ([@ethanwharris](https://github.com/ethanwharris)), Daniela Mihai ([@Ddaniela13](https://github.com/Ddaniela13)) and Jonathon Hare ([@jonhare](https://github.com/jonhare))
+
+Accepted to the [NeurIPS 2019](https://neurips.cc/) workshop on [Shared Visual Representations in Humans and Machines (SVRHM)](https://www.svrhm2019.com/)
 
 ## Notebooks
 
