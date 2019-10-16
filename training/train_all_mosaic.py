@@ -2,7 +2,7 @@
 Train models with input channels shuffled
 """
 import math
-from training.model import BaselineModel
+from .model import BaselineModel
 import torchvision.transforms as transforms
 import torchvision.transforms.functional as T
 from torchbearer import Trial
