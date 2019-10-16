@@ -101,8 +101,8 @@ testloader = DataLoader(testset, batch_size=32, shuffle=True, num_workers=8)
 for n_bn in bottlenecks:
     for d_vvs in ventral_depths:
         for t in range(n_trials):
-            model_file = f'./models/{cmode}-ch/model_{n_bn}_{d_vvs}_{t}.pt'
-            log_file = f'./logs/{cmode}-ch/model_{n_bn}_{d_vvs}_{t}.csv'
+            model_file = f'./models/{cmode}-mos/model_{n_bn}_{d_vvs}_{t}.pt'
+            log_file = f'./logs/{cmode}-mos/model_{n_bn}_{d_vvs}_{t}.csv'
 
             pathlib.Path(model_file).parents[0].mkdir(parents=True, exist_ok=True)
             pathlib.Path(log_file).parents[0].mkdir(parents=True, exist_ok=True)
