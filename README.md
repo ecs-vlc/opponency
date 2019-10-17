@@ -20,10 +20,10 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
 
 <table>
     <tr>
-        <td rowspan="2" width="160">
+        <td rowspan="3" width="160">
             <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/spectrally_opponent.png" width="256">
         </td>    
-        <td rowspan="2">
+        <td rowspan="3">
             <b>Spectral Opponency:</b> Generating the spectral opponency figures from the paper.
         </td>
         <td align="center" width="80">
@@ -40,10 +40,17 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/spectral_opponency.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
             <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/spatially_opponent.png" width="256">
         </td>    
-        <td rowspan="2">
+        <td rowspan="3">
             <b>Spatial Opponency:</b> Generating the spatial opponency figures from the paper.
         </td>
         <td align="center">
@@ -60,10 +67,17 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/spatial_opponency.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
             <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/double_opponent.png" width="256">
         </td>    
-        <td rowspan="2">
+        <td rowspan="3">
             <b>Double Opponency:</b> Generating the double opponency figures from the paper.
         </td>
         <td align="center">
@@ -80,10 +94,17 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/double_opponency.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
             <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/double_lab.png" width="256">
         </td>    
-        <td rowspan="2">
+        <td rowspan="3">
             <b>CIELAB:</b> Experiments in CIELAB colour space.
         </td>
         <td align="center">
@@ -100,10 +121,17 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/cielab.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
             <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/shuffled_spatial.png" width="256">
         </td>    
-        <td rowspan="2">
+        <td rowspan="3">
             <b>Channel Shuffled:</b> Experiments in with random channel shuffling.
         </td>
         <td align="center">
@@ -120,10 +148,17 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/channel_shuffled.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
             <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/greyscale_accuracy.png" width="256">
         </td>    
-        <td rowspan="2">
+        <td rowspan="3">
             <b>Classification Performance:</b> Accuracy plots from trained models.
         </td>
         <td align="center">
@@ -140,10 +175,17 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/classification_performance.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
             <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/0grey.png" width="256">
         </td>    
-        <td rowspan="2">
+        <td rowspan="3">
             <b>Gratings:</b> Generate example grating images.
         </td>
         <td align="center">
@@ -160,10 +202,17 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/gratings.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
             <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/spectral_depth_opponent.png" width="256">
         </td>    
-        <td rowspan="2">
+        <td rowspan="3">
             <b>Ventral Depth - Spectral:</b> Plot spectral opponency as a function of ventral depth.
         </td>
         <td align="center">
@@ -180,10 +229,17 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/spectral_depth.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
             <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/spatial_depth_opponent.png" width="256">
         </td>    
-        <td rowspan="2">
+        <td rowspan="3">
             <b>Ventral Depth - Spatial:</b> Plot spatial opponency as a function of ventral depth.
         </td>
         <td align="center">
@@ -200,10 +256,17 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/spatial_depth.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
             <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/retina_relu2.png" width="256">
         </td>    
-        <td rowspan="2">
+        <td rowspan="3">
             <b>Colour Distribution:</b> Plot of most excitatory and inhibitory colours.
         </td>
         <td align="center">
@@ -220,10 +283,17 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/excitatory_colours.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
             <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/spatial_responses.png" width="256">
         </td>    
-        <td rowspan="2">
+        <td rowspan="3">
             <b>Characterising a Single Cell:</b> Experiments showing the characterisation of a single cell.
         </td>
         <td align="center">
@@ -236,6 +306,13 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
         <td align="center">
             <a href="https://github.com/ecs-vlc/opponency/blob/master/cell_characterisation.ipynb">
                 <img src="http://www.pytorchbearer.org/assets/img/github_logo.png" height="32">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/cell_characterisation.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
             </a>
         </td>
     </tr>
