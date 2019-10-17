@@ -1,7 +1,7 @@
 """
 Train models in rotated colour space
 """
-from training.model import BaselineModel
+from model import BaselineModel
 import torchvision.transforms as transforms
 from torchbearer import Trial
 import torch
