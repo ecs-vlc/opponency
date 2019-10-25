@@ -1,9 +1,9 @@
 <p align="center">
-  <a href="./">ArXiv</a> •
+  <a href="https://arxiv.org/abs/1910.11086">ArXiv</a> •
   <a href="https://www.svrhm2019.com/">SVRHM</a> •
     <a href="https://neurips.cc/Conferences/2019/Schedule?showEvent=13196">NeurIPS 2019</a> •
   <a href="#notebooks">Notebooks</a> •
-  <a href="./">Citing</a>
+  <a href="">Citing</a>
 </p>
 
 # Spatial and Colour Opponency in Anatomically Constrained Deep Networks
