@@ -316,4 +316,58 @@ This repository contains the code for our paper 'Spatial and Colour Opponency in
             </a>
         </td>
     </tr>
+    <tr>
+        <td rowspan="3">
+            <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/colour_perception.png" width="256">
+        </td>    
+        <td rowspan="3">
+            <b>Colour Perception:</b> Experiments on colour sensitivity in Humans and Machines.
+        </td>
+        <td align="center">
+            <a href="https://nbviewer.jupyter.org/github/ecs-vlc/opponency/blob/master/colour_perception.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/nbviewer_logo.svg" height="34">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <a href="https://github.com/ecs-vlc/opponency/blob/master/colour_perception.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/github_logo.png" height="32">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/colour_perception.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
+            <img src="https://raw.githubusercontent.com/ecs-vlc/opponency/master/figures/mouse_lgn.png" width="256">
+        </td>    
+        <td rowspan="3">
+            <b>Mouse Spatial Tuning:</b> Spatial tuning curves for cells in the Mouse LGN from Zhao et al.
+        </td>
+        <td align="center">
+            <a href="https://nbviewer.jupyter.org/github/ecs-vlc/opponency/blob/master/mouse_lgn.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/nbviewer_logo.svg" height="34">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <a href="https://github.com/ecs-vlc/opponency/blob/master/mouse_lgn.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/github_logo.png" height="32">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <a href="https://colab.research.google.com/github/ecs-vlc/opponency/blob/master/mouse_lgn.ipynb">
+                <img src="http://www.pytorchbearer.org/assets/img/colab_logo.png" height="28">
+            </a>
+        </td>
+    </tr>
 </table>

@@ -106,6 +106,7 @@ venv.bak/
 .idea/
 
 figures/*.eps
+figures/*.pdf
 
 cifar-10-batches-py/
 cifar-10-python.tar.gz
