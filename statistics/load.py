@@ -8,6 +8,13 @@ def _load(frame, cell_type, mode, groupby='n_bn'):
     frame = frame.pivot_table(values='cell', index=['layer', 'd_vvs', 'n_bn', 'rep'], columns=['class'], aggfunc=np.sum)
     frame = frame.fillna(0.0).reset_index()
 
+    if mode + ' opponent' not in frame:
+        frame[mode + ' opponent'] = 0.0
+    if mode + ' non-opponent' not in frame:
+        frame[mode + ' non-opponent'] = 0.0
+    if mode + ' unresponsive' not in frame:
+        frame[mode + ' unresponsive'] = 0.0
+
     total = (
             frame.groupby(['layer', groupby, 'rep'])[mode + ' opponent'].sum() +
             frame.groupby(['layer', groupby, 'rep'])[mode + ' non-opponent'].sum() +

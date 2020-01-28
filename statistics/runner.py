@@ -7,6 +7,10 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 
+import os
+parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.sys.path.insert(0,parentdir) 
+
 from training.model import BaselineModel
 
 
@@ -15,6 +19,8 @@ class ParallelExperimentRunner:
         if devices is None:
             devices = ['cpu', 'cuda:0']
         model_list = glob.glob(os.path.join(root, '*.pt'))
+        print(os.path.join(root, '*.pt'))
+        
         self.model_queue = Queue()
         for model in model_list:
             self.model_queue.put((model, file_parse(model)))
@@ -31,7 +37,8 @@ class ParallelExperimentRunner:
                     break
                 model_file, metadata = self.model_queue.get()
                 model = BaselineModel(metadata['n_bn'], metadata['d_vvs'], metadata['n_ch']).to(device)
-                model.load_state_dict(torch.load(model_file, map_location=device))
+                #!!!!!Load-in the WEIGHTS!!!
+                #model.load_state_dict(torch.load(model_file, map_location=device))
                 res = self.meter(model, metadata, device)
                 sink.put(res)
                 self.model_queue.task_done()
@@ -71,12 +78,13 @@ class ParallelExperimentRunner:
 
 if __name__ == "__main__":
     # from rfdeviation import RFDeviation
-    from statistics.devalois import DeValois
+#     from statistics.devalois import DeValois
+    from statistics.spatial_opponency import SpatialOpponency
     # from orientation import RFOrientation
 
     def file_parse(file):
         v = file.split('.')[0].split('_')
         return {'n_bn': int(v[1]), 'd_vvs': int(v[2]), 'rep': int(v[3]), 'n_ch': 3}
 
-    runner = ParallelExperimentRunner('/home/ethan/Documents/models/colour-ch', file_parse, DeValois(lab=False), 0, 'devalois-ch.pd', devices=['cuda:1']) #0 to debug
+    runner = ParallelExperimentRunner('/home/daniela/PycharmProjects/opponency/grey', file_parse, SpatialOpponency(lab=False), 0, 'spatial_random.pd', devices=['cuda']) #0 to debug
     runner.run()
