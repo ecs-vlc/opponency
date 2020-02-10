@@ -18,7 +18,7 @@ bottlenecks = [1, 2, 4, 8, 16, 32]
 ventral_depths = [0, 1, 2, 3, 4]
 n_trials = 3
 cmode = 'colour-distort'
-angle = 45 / 360.
+angle = 90 / 360.
 
 nch = 3
 
@@ -27,7 +27,7 @@ def distort(image):
     image = np.array(image, np.float32, copy=False)
     image = color.rgb2hsv(image)
     image[:, :, 0] = image[:, :, 0] + angle
-    image[:, :, 0][image[:, :, 0] > 1.] = 1 - image[:, :, 0][image[:, :, 0] > 1.]
+
     image = color.hsv2rgb(image)
     image = torch.from_numpy(image).float() / 255.
 
