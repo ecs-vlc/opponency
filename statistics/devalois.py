@@ -47,7 +47,7 @@ def deValoisExperiment(model, layer, featuremap_position=(16, 16), stepsize=10, 
         stimulus = torch.ones((1, 32, 32, 3)) * i
 
         if lab:
-            stimulus = torch.from_numpy(color.rgb2lab(stimulus.numpy())).float().div(100)
+            stimulus = torch.from_numpy(color.rgb2lab(stimulus.numpy())).float()
 
         stimulus = stimulus.permute(0, 3, 2, 1)
         featuremaps = model.forward_to_layer(stimulus.to(device), layer)
@@ -95,12 +95,14 @@ def deValoisExperimentStats(model, layer, spontaneous_level=0, device='cpu', lab
         else:
             classes[i] = 'spectrally opponent'
 
-        val, idx = torch.max(response, dim=0)
-        max_params.append(data['hues'][idx.item()])
+        perm = torch.randperm(response.size(0))
+        val, idx = torch.max(response[perm], dim=0)
+        max_params.append(data['hues'][perm[idx.item()]])
         maxes.append(val.item())
 
-        val, idx = torch.min(response, dim=0)
-        min_params.append(data['hues'][idx.item()])
+        perm = torch.randperm(response.size(0))
+        val, idx = torch.min(response[perm], dim=0)
+        min_params.append(data['hues'][perm[idx.item()]])
         mins.append(val.item())
 
     return classes, max_params, maxes, min_params, mins, spontaneous_rates

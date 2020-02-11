@@ -93,6 +93,22 @@ class BaselineModel(nn.Module):
         for name, module in self.retina:
             module.load_state_dict(retina_dict[name])
 
+    def conv_dict(self):
+        res = {}
+        for name, module in self.retina:
+            res[name] = module.state_dict()
+        for name, module in self.ventral:
+            if 'conv' in name:
+                res[name] = module.state_dict()
+        return res
+
+    def load_conv_dict(self, conv_dict):
+        for name, module in self.retina:
+            module.load_state_dict(conv_dict[name])
+        for name, module in self.ventral:
+            if 'conv' in name:
+                module.load_state_dict(conv_dict[name])
+
     def forward(self, x):
         for name, module in self.retina:
             x = module(x)

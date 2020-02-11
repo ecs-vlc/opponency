@@ -20,16 +20,16 @@ n_trials = 3
 cmode = 'colour-distort'
 angle = 90 / 360.
 
-nch = 3
+nch = 10
 
 
 def distort(image):
-    image = np.array(image, np.float32, copy=False)
+    image = np.array(image, np.float32, copy=False) / 255.
     image = color.rgb2hsv(image)
     image[:, :, 0] = image[:, :, 0] + angle
 
     image = color.hsv2rgb(image)
-    image = torch.from_numpy(image).float() / 255.
+    image = torch.from_numpy(image).float()
 
     image = image.view(32, 32, 3)
     # put it from HWC to CHW format
@@ -76,4 +76,4 @@ for n_bn in bottlenecks:
                     torchbearer.callbacks.csv_logger.CSVLogger(log_file)]).to(device)
             trial.with_generators(trainloader, val_generator=testloader)
             trial.run(epochs=20, verbose=1)
-            torch.save(model.state_dict(), model_file)
+            torch.save(model.conv_dict(), model_file)
