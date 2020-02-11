@@ -16,11 +16,11 @@ from skimage import color
 
 bottlenecks = [1, 2, 4, 8, 16, 32]
 ventral_depths = [0, 1, 2, 3, 4]
-n_trials = 3
+n_trials = 10
 cmode = 'colour-distort'
 angle = 90 / 360.
 
-nch = 10
+nch = 3
 
 
 def distort(image):
