@@ -128,8 +128,8 @@ if __name__ == '__main__':
     ])
 
     # load data
-    trainset = ImageNet("/ssd", 'train', transform=train_transform)
-    testset = ImageNet("/ssd", 'val', transform=test_transform)
+    trainset = ImageNet("/local/imagenet", 'train', transform=train_transform)
+    testset = ImageNet("/local/imagenet", 'val', transform=test_transform)
 
     # create data loaders
     trainloader = DataLoader(trainset, batch_size=256, shuffle=True, num_workers=5)
@@ -147,4 +147,3 @@ if __name__ == '__main__':
     trial.run(epochs=20)
     results = trial.evaluate(data_key=torchbearer.TEST_DATA)
     print(results)
-
