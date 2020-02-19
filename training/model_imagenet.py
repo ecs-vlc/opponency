@@ -51,7 +51,7 @@ class ImageNetModel(BaselineModel):
 
         self.ventral.append(("ventral_pool", nn.AvgPool2d(4, stride=4)))
         self.ventral.append(("ventral_flatten", Flatten()))
-        self.ventral.append(("ventral_fc1", nn.Linear(last_size*8*8, 1024)))
+        self.ventral.append(("ventral_fc1", nn.Linear(last_size*32*32, 1024)))
         self.ventral.append(("ventral_fc1_relu", nn.ReLU()))
         self.ventral.append(("ventral_fc2", nn.Linear(1024, 1000)))
 
