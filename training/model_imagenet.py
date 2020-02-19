@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
     # load data
     trainset = ImageNet("/local/imagenet", 'train', transform=train_transform)
-    testset = ImageNet("/local/imagenet", 'test', transform=test_transform)
+    testset = ImageNet("/local/imagenet", 'val', transform=test_transform)
 
     # create data loaders
     trainloader = DataLoader(trainset, batch_size=256, shuffle=True, num_workers=5)
