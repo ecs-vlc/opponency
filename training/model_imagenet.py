@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 
+from model import BaselineModel
+
 
 class Flatten(nn.Module):
     """Flatten incoming tensors
@@ -22,7 +24,7 @@ def init_weights(m):
         torch.nn.init.zeros_(m.bias)
 
 
-class BaselineModel(nn.Module):
+class ImageNetModel(BaselineModel):
     """
     Parameterised implemention of the retina-net - ventral stream architecture.
     Note that the last layer does not have an explicit softmax and will thus output the logits
@@ -32,7 +34,7 @@ class BaselineModel(nn.Module):
     :param n_inch: Number of input channels
     """
     def __init__(self, n_bn, d_vvs, n_inch=1):
-        super(BaselineModel, self).__init__()
+        super(ImageNetModel, self).__init__(n_bn, d_vvs, n_inch)
 
         self.retina = []
         self.retina.append(("retina_conv1", nn.Conv2d(n_inch, 32, (9, 9), padding=4)))
@@ -47,9 +49,9 @@ class BaselineModel(nn.Module):
             self.ventral.append(("ventral_relu"+str(i), nn.ReLU()))
             last_size = 32
 
-        self.ventral.append(("ventral pool", nn.AvgPool2d(4, stride=4)))
+        self.ventral.append(("ventral_pool", nn.AvgPool2d(4, stride=4)))
         self.ventral.append(("ventral_flatten", Flatten()))
-        self.ventral.append(("ventral_fc1", nn.Linear(last_size*32*32, 1024)))
+        self.ventral.append(("ventral_fc1", nn.Linear(last_size*8*8, 1024)))
         self.ventral.append(("ventral_fc1_relu", nn.ReLU()))
         self.ventral.append(("ventral_fc2", nn.Linear(1024, 1000)))
 
@@ -61,56 +63,25 @@ class BaselineModel(nn.Module):
 
         self.apply(init_weights)
 
-    def has_layer(self, layer_name):
-        for name, module in self.retina:
-            if layer_name == name:
-                return True
-        for name, module in self.ventral:
-            if layer_name == name:
-                return True
-        return False
-
-    def forward_to_layer(self, x, layer_name):
-        """
-        Forward propagate to a specific named layer and return the result
-        """
-        for name, module in self.retina:
-            x = module(x)
-            if layer_name == name:
-                return x
-        for name, module in self.ventral:
-            x = module(x)
-            if layer_name == name:
-                return x
-        return x
-
-    def retina_dict(self):
-        res = {}
-        for name, module in self.retina:
-            res[name] = module.state_dict()
-        return res
-
-    def load_retina_dict(self, retina_dict):
-        for name, module in self.retina:
-            module.load_state_dict(retina_dict[name])
-
-    def forward(self, x):
-        for name, module in self.retina:
-            x = module(x)
-        for name, module in self.ventral:
-            x = module(x)
-        return x
-
 
 if __name__ == '__main__':
-    """Train a single mpodel to test
+    """Train a single model
     """
     import torchvision.transforms as transforms
-    from torchbearer import Trial
-    import torchbearer
+    from torchbearer import Trial, callbacks
     from torch import optim
     from torch.utils.data import DataLoader
     from torchvision.datasets import ImageNet
+
+    import argparse
+
+    parser = argparse.ArgumentParser(description='VAE ASI')
+    parser.add_argument('--n-bn', default=4, type=int, help='bottleneck size')
+    parser.add_argument('--rep', default=1, type=int, help='repeat number')
+    args = parser.parse_args()
+
+    model_file = f'./models/imagenet/model_{args.n_bn}_{args.rep}.pt'
+    log_file = f'./logs/imagenet/model_{args.n_bn}_{args.rep}.csv'
 
     train_transform = transforms.Compose([
         #transforms.Grayscale(),
@@ -129,21 +100,21 @@ if __name__ == '__main__':
 
     # load data
     trainset = ImageNet("/local/imagenet", 'train', transform=train_transform)
-    testset = ImageNet("/local/imagenet", 'val', transform=test_transform)
+    testset = ImageNet("/local/imagenet", 'test', transform=test_transform)
 
     # create data loaders
     trainloader = DataLoader(trainset, batch_size=256, shuffle=True, num_workers=5)
     testloader = DataLoader(testset, batch_size=256, shuffle=True,  num_workers=5)
 
-    model = BaselineModel(4, 1, n_inch=3)
-    print(model)
+    model = ImageNetModel(args.n_bn, 2, n_inch=3)
+    # print(model)
 
     optimiser = optim.RMSprop(model.parameters(), alpha=0.9, lr=0.0001, weight_decay=1e-6)
     loss_function = nn.CrossEntropyLoss()
 
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
-    trial = Trial(model, optimiser, loss_function, metrics=['loss', 'accuracy']).to(device)
-    trial.with_generators(trainloader, test_generator=testloader)
+    trial = Trial(model, optimiser, loss_function, metrics=['loss', 'accuracy'], callbacks=[callbacks.CSVLogger(log_file)]).to(device)
+    trial.with_generators(trainloader, val_generator=testloader)
     trial.run(epochs=20)
-    results = trial.evaluate(data_key=torchbearer.TEST_DATA)
-    print(results)
+
+    torch.save(model.conv_dict(), model_file)
