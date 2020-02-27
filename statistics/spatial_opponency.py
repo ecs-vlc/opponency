@@ -5,8 +5,8 @@ from skimage import color
 
 gratings = []
 grating_params = []
-for theta in np.arange(0, 2*np.pi, np.pi / 18):
-    for phase in np.arange(0, 2*np.pi, np.pi / 32):
+for theta in np.arange(0, 2*np.pi, np.pi / 9):
+    for phase in np.arange(0, 2*np.pi, np.pi / 16):
         for freq in range(16):
             grating = (make_grating(freq, theta, phase)).unsqueeze(2).repeat(1, 1, 3).unsqueeze(0).permute(0, 3, 2, 1)
             gratings.append(grating)

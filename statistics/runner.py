@@ -84,13 +84,13 @@ class ParallelExperimentRunner:
 
 if __name__ == "__main__":
     # from rfdeviation import RFDeviation
-    from statistics.devalois import DeValois
-    # from statistics.spatial_opponency import SpatialOpponency
+    # from statistics.devalois import DeValois
+    from statistics.spatial_opponency import SpatialOpponency
     # from orientation import RFOrientation
 
     def file_parse(file):
         v = file.split('.')[0].split('_')
         return {'n_bn': int(v[1]), 'd_vvs': int(v[2]), 'rep': int(v[3]), 'n_ch': 3}
 
-    runner = ParallelExperimentRunner('/home/ethan/Documents/models/colour', file_parse, DeValois(lab=False), 0, 'devalois.pd', devices=['cuda']) #0 to debug
+    runner = ParallelExperimentRunner('/home/ethan/Documents/models/colour-lab', file_parse, SpatialOpponency(lab=True), 0, 'spatial-lab.pd', devices=['cuda']) #0 to debug
     runner.run()
