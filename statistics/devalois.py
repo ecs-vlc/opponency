@@ -6,10 +6,13 @@ from .wavelength import hsl_to_rgb
 from skimage import color
 
 
-def deValoisExperiment(model, layer, featuremap_position=(16, 16), stepsize=10, device='cpu', lab=False):
+def deValoisExperiment(model, layer, size=32, stepsize=10, device='cpu', lab=False):
     """
     Experiment for a single cell
     """
+
+    featuremap_position = int(size / 2.0)
+
     # if plot:
     #     plt.figure()
     #     plt.title(layer + ', ' + str(featuremap_index))
@@ -27,7 +30,7 @@ def deValoisExperiment(model, layer, featuremap_position=(16, 16), stepsize=10, 
         # energy = 1.0 / wavelength * maxWavelength
         rgb = hsl_to_rgb(h, 1., 0.5)
         #             print(rgb.norm(p=2))
-        stimulus = torch.ones((1, 32, 32, 3)) * torch.Tensor(rgb)
+        stimulus = torch.ones((1, size, size, 3)) * torch.Tensor(rgb)
 
         # if brightness == brightnessModifier[0]:
         #     st = torch.ones((1, 32, 32, 3)) * wavelength_to_rgb(wavelength) / brightness / energy
@@ -36,22 +39,24 @@ def deValoisExperiment(model, layer, featuremap_position=(16, 16), stepsize=10, 
             stimulus = torch.from_numpy(color.rgb2lab(stimulus.numpy())).float().div(100)
 
         stimulus = stimulus.permute(0, 3, 2, 1)
-        featuremaps = model.forward_to_layer(stimulus.to(device), layer)
-        hues.append(h)
-        responses.append(featuremaps[0, :, featuremap_position[0], featuremap_position[1]])
+
+        with torch.no_grad():
+            featuremaps = model.forward_to_layer(stimulus.to(device), layer)
+            hues.append(h)
+            responses.append(featuremaps[0, :, featuremap_position, featuremap_position])
     # if plot:
     #     plt.plot(wls, responses)
     all_responses['hue_responses'] = torch.stack(responses, 0)
 
     for i in np.arange(0, 1.1, 0.5):
-        stimulus = torch.ones((1, 32, 32, 3)) * i
+        stimulus = torch.ones((1, size, size, 3)) * i
 
         if lab:
             stimulus = torch.from_numpy(color.rgb2lab(stimulus.numpy())).float()
 
         stimulus = stimulus.permute(0, 3, 2, 1)
         featuremaps = model.forward_to_layer(stimulus.to(device), layer)
-        r = featuremaps[0, :, featuremap_position[0], featuremap_position[1]]
+        r = featuremaps[0, :, featuremap_position, featuremap_position]
         # if plot:
         #     plt.plot(wls, [r] * len(wls))
         all_responses['uniform_responses'][i] = r
@@ -65,12 +70,12 @@ def deValoisExperiment(model, layer, featuremap_position=(16, 16), stepsize=10, 
     return all_responses
 
 
-def deValoisExperimentStats(model, layer, spontaneous_level=0, device='cpu', lab=False):
+def deValoisExperimentStats(model, layer, spontaneous_level=0, device='cpu', lab=False, size=32):
     """
     Generate classification for a single cell
     """
     # sc = None
-    data = deValoisExperiment(model, layer, device=device, lab=lab)
+    data = deValoisExperiment(model, layer, device=device, lab=lab, size=size)
 
     spontaneous_rates = data['uniform_responses'][spontaneous_level]
 
@@ -109,12 +114,13 @@ def deValoisExperimentStats(model, layer, spontaneous_level=0, device='cpu', lab
 
 
 class DeValois(Meter):
-    def __init__(self, layers=None, lab=False):
+    def __init__(self, layers=None, lab=False, size=32):
         if layers is None:
             layers = ['retina_relu2', 'ventral_relu0', 'ventral_relu1']
         super().__init__(['layer', 'cell', 'class', 'max_params', 'max', 'min_params', 'min', 'spontaneous_rate'])
         self.layers = layers
         self.lab = lab
+        self.size = size
 
     def compute(self, model, metadata, device):
         model.eval()
@@ -122,8 +128,8 @@ class DeValois(Meter):
         for layer in self.layers:
             if not model.has_layer(layer):
                 continue
-            classes, max_params, maxes, min_params, mins, spontaneous_rates = deValoisExperimentStats(model, layer,
-                                                                                                      device=device, lab=self.lab)
+            classes, max_params, maxes, min_params, mins, spontaneous_rates =\
+                deValoisExperimentStats(model, layer, device=device, lab=self.lab, size=self.size)
             res[0] += [layer] * len(classes)
             res[1] += list(range(len(classes)))
             res[2] += classes

@@ -3,7 +3,7 @@ import torch
 
 def make_grating(freq, theta, phase, sz=(32, 32)):
     if not torch.is_tensor(theta):
-        theta = torch.ones(1) * theta
+        theta = torch.ones(1, requires_grad=False) * theta
     omega = [freq * torch.cos(theta), freq * torch.sin(theta)]
     radius = (int(sz[0]/2.0), int(sz[1]/2.0))
     [x, y] = torch.meshgrid([torch.linspace(-radius[0], sz[0] - radius[0] - 1, steps=radius[0] * 2), torch.linspace(-radius[1], sz[1] - radius[1] - 1, steps=radius[1] * 2)])
