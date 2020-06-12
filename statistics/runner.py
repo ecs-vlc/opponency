@@ -86,14 +86,15 @@ class ParallelExperimentRunner:
 
 if __name__ == "__main__":
     # from rfdeviation import RFDeviation
-    # from statistics.devalois import DeValois
-    from statistics.spatial_opponency import SpatialOpponency
+    from statistics.devalois import DeValois
+    # from statistics.spatial_opponency import SpatialOpponency
     # from orientation import RFOrientation
-    from training.model_imagenet import ImageNetModel
+    from training.model import BaselineModel
+    # from training.model_imagenet import ImageNetModel
 
     def file_parse(file):
         v = file.split('.')[0].split('_')
-        return {'n_bn': int(v[1]), 'd_vvs': 2, 'rep': int(v[2]), 'n_ch': 3}
+        return {'n_bn': int(v[1]), 'd_vvs': int(v[2]), 'rep': int(v[3]), 'n_ch': 3}
 
-    runner = ParallelExperimentRunner('/home/ethan/Documents/models/imagenet', file_parse, SpatialOpponency(size=128), 0, 'spatial-imagenet.pd', model_class=ImageNetModel, devices=['cuda']) #0 to debug
+    runner = ParallelExperimentRunner('/home/ethan/Documents/models/colour-ch', file_parse, DeValois(), 0, 'devalois-ch.pd', model_class=BaselineModel, devices=['cuda']) #0 to debug
     runner.run()

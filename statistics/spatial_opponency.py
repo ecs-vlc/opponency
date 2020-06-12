@@ -3,19 +3,42 @@ import numpy as np
 from statistics.gratings import *
 from skimage import color
 
+GRATINGS_CACHE = {}
 
-def gen_gratings(size):
+
+def gen_gratings(size, theta_steps=9, theta_max=180, phase_steps=5):
+    params = f'{size}, {theta_steps}, {theta_max}, {phase_steps}'
+    if params in GRATINGS_CACHE:
+        return GRATINGS_CACHE[params]
+
+    win = psychopy.visual.Window(
+        size=(size, size),
+        units="pix",
+        fullscr=False
+    )
+
+    grating_sim = psychopy.visual.GratingStim(
+        win=win,
+        units="pix",
+        size=(size * 2, size * 2)
+    )
+
     gratings = []
     grating_params = []
-    for theta in np.arange(0, 2*np.pi, np.pi / 9):
-        for phase in np.arange(0, 2*np.pi, np.pi / 16):
-            for freq in range(16):
-                grating = (make_grating(freq, theta, phase, sz=(size, size))).unsqueeze(2).repeat(1, 1, 3).unsqueeze(0).permute(0, 3, 2, 1)
+    theta_inc = theta_max / theta_steps
+    phase_inc = 1.0 / phase_steps
+    for theta in np.arange(0, theta_max + theta_inc, theta_inc):
+        for phase in np.arange(0, 1.0 + phase_inc, phase_inc):
+            for freq in range(1, (size // 2) + 1):
+                grating = make_grating(freq, theta, phase, grating=grating_sim, win=win)
                 gratings.append(grating)
                 grating_params.append({'freq': freq, 'theta': theta, 'phase': phase})
+    win.close()
     gratings = torch.cat(gratings, dim=0)
     gratings.requires_grad = False
     gratings_list = gratings.chunk(int(gratings.size(0) / 128.))
+
+    GRATINGS_CACHE[params] = (grating_params, gratings_list)
     return grating_params, gratings_list
 
 

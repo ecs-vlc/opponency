@@ -71,13 +71,16 @@ if __name__ == '__main__':
     from torchbearer import Trial, callbacks
     from torch import optim
     from torch.utils.data import DataLoader
-    from torchvision.datasets import ImageNet
+    from .imagenet_hdf5 import ImageNetHDF5
+    # from torchvision.datasets import ImageNet
 
     import argparse
 
     parser = argparse.ArgumentParser(description='VAE ASI')
     parser.add_argument('--n-bn', default=4, type=int, help='bottleneck size')
+    parser.add_argument('--d-vvs', default=2, type=int, help='ventral depth')
     parser.add_argument('--rep', default=1, type=int, help='repeat number')
+    parser.add_argument('--root', type=str, help='root')
     args = parser.parse_args()
 
     model_file = f'./models/imagenet/model_{args.n_bn}_{args.rep}.pt'
@@ -99,14 +102,14 @@ if __name__ == '__main__':
     ])
 
     # load data
-    trainset = ImageNet("/local/imagenet", 'train', transform=train_transform)
-    testset = ImageNet("/local/imagenet", 'val', transform=test_transform)
+    trainset = ImageNetHDF5(f'{args.root}/train', transform=train_transform)
+    testset = ImageNetHDF5(f'{args.root}/val', transform=test_transform)
 
     # create data loaders
     trainloader = DataLoader(trainset, batch_size=256, shuffle=True, num_workers=5)
     testloader = DataLoader(testset, batch_size=256, shuffle=True,  num_workers=5)
 
-    model = ImageNetModel(args.n_bn, 2, n_inch=3)
+    model = ImageNetModel(args.n_bn, args.d_vvs, n_inch=3)
     # print(model)
 
     optimiser = optim.RMSprop(model.parameters(), alpha=0.9, lr=0.0001, weight_decay=1e-6)
