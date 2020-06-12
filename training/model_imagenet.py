@@ -71,7 +71,7 @@ if __name__ == '__main__':
     from torchbearer import Trial, callbacks
     from torch import optim
     from torch.utils.data import DataLoader
-    from .imagenet_hdf5 import ImageNetHDF5
+    from imagenet_hdf5 import ImageNetHDF5
     # from torchvision.datasets import ImageNet
 
     import argparse
