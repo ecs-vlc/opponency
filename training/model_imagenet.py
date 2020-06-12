@@ -83,8 +83,8 @@ if __name__ == '__main__':
     parser.add_argument('--root', type=str, help='root')
     args = parser.parse_args()
 
-    model_file = f'./models/imagenet/model_{args.n_bn}_{args.rep}.pt'
-    log_file = f'./logs/imagenet/model_{args.n_bn}_{args.rep}.csv'
+    model_file = f'./models/imagenet/model_{args.n_bn}_{args.d_vvs}_{args.rep}.pt'
+    log_file = f'./logs/imagenet/model_{args.n_bn}_{args.d_vvs}_{args.rep}.csv'
 
     train_transform = transforms.Compose([
         #transforms.Grayscale(),
