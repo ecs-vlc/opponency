@@ -77,14 +77,18 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='VAE ASI')
-    parser.add_argument('--n-bn', default=4, type=int, help='bottleneck size')
+    parser.add_argument('--arr', default=0, type=int, help='point in job array')
     parser.add_argument('--d-vvs', default=2, type=int, help='ventral depth')
-    parser.add_argument('--rep', default=1, type=int, help='repeat number')
     parser.add_argument('--root', type=str, help='root')
     args = parser.parse_args()
 
-    model_file = f'./models/imagenet/model_{args.n_bn}_{args.d_vvs}_{args.rep}.pt'
-    log_file = f'./logs/imagenet/model_{args.n_bn}_{args.d_vvs}_{args.rep}.csv'
+    bns = [1, 2, 4, 8, 16, 32]
+
+    n_bn = bns[args.arr % 6]
+    rep = args.arr // 6
+
+    model_file = f'./models/imagenet/model_{n_bn}_{args.d_vvs}_{rep}.pt'
+    log_file = f'./logs/imagenet/model_{n_bn}_{args.d_vvs}_{rep}.csv'
 
     train_transform = transforms.Compose([
         #transforms.Grayscale(),
@@ -109,7 +113,7 @@ if __name__ == '__main__':
     trainloader = DataLoader(trainset, batch_size=256, shuffle=True, num_workers=5)
     testloader = DataLoader(testset, batch_size=256, shuffle=True,  num_workers=5)
 
-    model = ImageNetModel(args.n_bn, args.d_vvs, n_inch=3)
+    model = ImageNetModel(n_bn, args.d_vvs, n_inch=3)
     # print(model)
 
     optimiser = optim.RMSprop(model.parameters(), alpha=0.9, lr=0.0001, weight_decay=1e-6)
