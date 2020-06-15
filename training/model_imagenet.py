@@ -111,8 +111,8 @@ if __name__ == '__main__':
     testset = ImageNetHDF5(f'{args.root}/val', transform=test_transform, cache_size=args.cache)
 
     # create data loaders
-    trainloader = DataLoader(trainset, batch_size=256, shuffle=True, num_workers=5)
-    testloader = DataLoader(testset, batch_size=256, shuffle=True,  num_workers=5)
+    trainloader = DataLoader(trainset, batch_size=256, shuffle=True, num_workers=15)
+    testloader = DataLoader(testset, batch_size=256, shuffle=True,  num_workers=15)
 
     model = ImageNetModel(n_bn, args.d_vvs, n_inch=3)
     # print(model)
