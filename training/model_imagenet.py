@@ -76,9 +76,10 @@ if __name__ == '__main__':
 
     import argparse
 
-    parser = argparse.ArgumentParser(description='VAE ASI')
+    parser = argparse.ArgumentParser(description='Imagenet Training')
     parser.add_argument('--arr', default=0, type=int, help='point in job array')
     parser.add_argument('--d-vvs', default=2, type=int, help='ventral depth')
+    parser.add_argument('--cache', default=250, type=int, help='cache size')
     parser.add_argument('--root', type=str, help='root')
     args = parser.parse_args()
 
@@ -106,8 +107,8 @@ if __name__ == '__main__':
     ])
 
     # load data
-    trainset = ImageNetHDF5(f'{args.root}/train', transform=train_transform)
-    testset = ImageNetHDF5(f'{args.root}/val', transform=test_transform)
+    trainset = ImageNetHDF5(f'{args.root}/train', transform=train_transform, cache_size=args.cache)
+    testset = ImageNetHDF5(f'{args.root}/val', transform=test_transform, cache_size=args.cache)
 
     # create data loaders
     trainloader = DataLoader(trainset, batch_size=256, shuffle=True, num_workers=5)
