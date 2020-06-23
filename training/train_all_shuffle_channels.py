@@ -79,4 +79,4 @@ trial = Trial(model, optimiser, loss_function, metrics=['loss', 'accuracy'],
               callbacks=[shuffle, torchbearer.callbacks.csv_logger.CSVLogger(log_file)]).to(device)
 trial.with_generators(trainloader, val_generator=testloader)
 trial.run(epochs=20)
-torch.save(model.state_dict(), model_file)
+torch.save(model.conv_dict(), model_file)
