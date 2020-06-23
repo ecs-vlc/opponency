@@ -1,7 +1,7 @@
 """
 Train models with input channels shuffled
 """
-from training.model import BaselineModel
+from model import BaselineModel
 import torchvision.transforms as transforms
 from torchbearer import Trial
 import torch
