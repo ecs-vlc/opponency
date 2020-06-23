@@ -72,7 +72,7 @@ def shuffle(state):
     img = state[torchbearer.X]
     x = img.permute(0, 2, 3, 1)
     x = x[:, :, :, torch.randperm(x.size(3))]
-    state[torchbearer.X] = x.view(img.size(0), img.size(2), img.size(3), img.size(1)).permute(0, 3, 1, 2)
+    state[torchbearer.X] = x.view(img.size(0), img.size(2), img.size(3), img.size(1)).permute(0, 3, 1, 2).contiguous()
 
 
 trial = Trial(model, optimiser, loss_function, metrics=['loss', 'accuracy'],
