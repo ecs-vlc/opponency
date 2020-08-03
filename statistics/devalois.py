@@ -6,7 +6,7 @@ from .wavelength import hsl_to_rgb
 from skimage import color
 
 
-def deValoisExperiment(model, layer, size=32, stepsize=10, device='cpu', lab=False):
+def deValoisExperiment(model, layer, size=32, stepsize=1, device='cpu', lab=False):
     """
     Experiment for a single cell
     """
@@ -43,7 +43,8 @@ def deValoisExperiment(model, layer, size=32, stepsize=10, device='cpu', lab=Fal
         with torch.no_grad():
             featuremaps = model.forward_to_layer(stimulus.to(device), layer)
             hues.append(h)
-            responses.append(featuremaps[0, :, featuremap_position, featuremap_position])
+            response = featuremaps[0, :, featuremap_position, featuremap_position]
+            responses.append(response)
     # if plot:
     #     plt.plot(wls, responses)
     all_responses['hue_responses'] = torch.stack(responses, 0)
@@ -75,7 +76,7 @@ def deValoisExperimentStats(model, layer, spontaneous_level=0, device='cpu', lab
     Generate classification for a single cell
     """
     # sc = None
-    data = deValoisExperiment(model, layer, device=device, lab=lab, size=size)
+    data = deValoisExperiment(model, layer.replace('relu', 'conv'), device=device, lab=lab, size=size)
 
     spontaneous_rates = data['uniform_responses'][spontaneous_level]
 
@@ -93,12 +94,10 @@ def deValoisExperimentStats(model, layer, spontaneous_level=0, device='cpu', lab
 
         if torch.all(response == spontaneous_rate):
             classes[i] = 'spectrally unresponsive'
-        elif torch.all(response <= spontaneous_rate):
-            classes[i] = 'spectrally non-opponent'  # / inhibitors'
-        elif torch.all(response >= spontaneous_rate):
-            classes[i] = 'spectrally non-opponent'  # / excitators'
-        else:
+        elif (response.max() > spontaneous_rate) and (response.min() < spontaneous_rate) and (spontaneous_rate > 0.0):
             classes[i] = 'spectrally opponent'
+        else:
+            classes[i] = 'spectrally non-opponent'
 
         perm = torch.randperm(response.size(0))
         val, idx = torch.max(response[perm], dim=0)
