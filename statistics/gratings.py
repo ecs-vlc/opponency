@@ -1,14 +1,46 @@
 import torch
+from torchvision import transforms
+import psychopy.visual
+import psychopy.event
 
 
-def make_grating(freq, theta, phase, sz=(32, 32)):
-    if not torch.is_tensor(theta):
-        theta = torch.ones(1) * theta
-    omega = [freq * torch.cos(theta), freq * torch.sin(theta)]
-    radius = (int(sz[0]/2.0), int(sz[1]/2.0))
-    [x, y] = torch.meshgrid([torch.linspace(-radius[0], sz[0] - radius[0] - 1, steps=radius[0] * 2), torch.linspace(-radius[1], sz[1] - radius[1] - 1, steps=radius[1] * 2)])
-    stimuli = 0.5 * torch.cos(omega[0] * x + omega[1] * y + phase) + 0.5
-    return stimuli
+def make_grating(freq, theta, phase, sz=32, grating=None, win=None):
+    was_none = False
+    if win is None:
+        was_none = True
+        win = psychopy.visual.Window(
+            size=(sz, sz),
+            units="pix",
+            fullscr=False
+        )
+
+    if grating is None:
+        grating = psychopy.visual.GratingStim(
+            win=win,
+            units="pix",
+            size=(sz * 2, sz * 2)
+        )
+
+    grating.phase = phase
+    grating.sf = freq / sz
+    grating.ori = 90 - theta
+
+    grating.draw()
+    win.flip()
+    img = win.getMovieFrame()
+
+    if was_none:
+        win.close()
+
+    return transforms.ToTensor()(img).unsqueeze_(0)
+
+    # if not torch.is_tensor(theta):
+    #     theta = torch.ones(1, requires_grad=False) * theta
+    # # omega = [freq * torch.cos(theta), freq * torch.sin(theta)]
+    # radius = (int(sz[0]/2.0), int(sz[1]/2.0))
+    # [x, y] = torch.meshgrid([torch.linspace(-radius[0], sz[0] - radius[0] - 1, steps=radius[0] * 2), torch.linspace(-radius[1], sz[1] - radius[1] - 1, steps=radius[1] * 2)])
+    # stimuli = 0.5 * torch.cos(omega[0] * x + omega[1] * y + phase) + 0.5
+    # return stimuli
 
 
 def make_grating_rg(freq, theta, phase, sz=(32, 32)):

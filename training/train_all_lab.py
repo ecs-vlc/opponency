@@ -1,7 +1,7 @@
 """
 Train models in CIELAB space
 """
-from training.model import BaselineModel
+from model import BaselineModel
 import torchvision.transforms as transforms
 from torchbearer import Trial
 import torch
@@ -70,4 +70,4 @@ for n_bn in bottlenecks:
                 callbacks=[torchbearer.callbacks.csv_logger.CSVLogger(log_file)]).to(device)
             trial.with_generators(trainloader, val_generator=testloader)
             trial.run(epochs=20, verbose=1)
-            torch.save(model.state_dict(), model_file)
+            torch.save(model.conv_dict(), model_file)

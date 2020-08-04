@@ -8,6 +8,13 @@ def _load(frame, cell_type, mode, groupby='n_bn'):
     frame = frame.pivot_table(values='cell', index=['layer', 'd_vvs', 'n_bn', 'rep'], columns=['class'], aggfunc=np.sum)
     frame = frame.fillna(0.0).reset_index()
 
+    if mode + ' opponent' not in frame:
+        frame[mode + ' opponent'] = 0.0
+    if mode + ' non-opponent' not in frame:
+        frame[mode + ' non-opponent'] = 0.0
+    if mode + ' unresponsive' not in frame:
+        frame[mode + ' unresponsive'] = 0.0
+
     total = (
             frame.groupby(['layer', groupby, 'rep'])[mode + ' opponent'].sum() +
             frame.groupby(['layer', groupby, 'rep'])[mode + ' non-opponent'].sum() +
@@ -35,7 +42,7 @@ def spatial(frame, cell_type, groupby='n_bn'):
     return _load(frame, cell_type, 'spatially', groupby=groupby)
 
 
-def double(spectral, spatial):
+def double(spectral, spatial, groupby='n_bn'):
     spatial = spatial.rename(index=str, columns={'class': 'spatial_class'}).sort_values(
         ['layer', 'cell', 'n_bn', 'd_vvs', 'rep'])
     spectral = spectral.rename(index=str, columns={'class': 'spectral_class'}).sort_values(
@@ -62,12 +69,12 @@ def double(spectral, spatial):
                               aggfunc=np.sum)
     frame = frame.fillna(0.0).reset_index()
 
-    total = (frame.groupby(['layer', 'n_bn', 'rep'])[False].sum() + frame.groupby(['layer', 'n_bn', 'rep'])[True].sum())
+    total = (frame.groupby(['layer', groupby, 'rep'])[False].sum() + frame.groupby(['layer', groupby, 'rep'])[True].sum())
 
-    opps = (frame.groupby(['layer', 'n_bn', 'rep'])[True].sum() / total).to_frame(name='rel_amount')
+    opps = (frame.groupby(['layer', groupby, 'rep'])[True].sum() / total).to_frame(name='rel_amount')
 
-    mopps = opps.groupby(['layer', 'n_bn']).mean().reset_index().rename(index=str, columns={'rel_amount': 'mean_rel_amount'})
-    sopps = opps.groupby(['layer', 'n_bn']).std().reset_index().rename(index=str, columns={'rel_amount': 'std_rel_amount'})
+    mopps = opps.groupby(['layer', groupby]).mean().reset_index().rename(index=str, columns={'rel_amount': 'mean_rel_amount'})
+    sopps = opps.groupby(['layer', groupby]).std().reset_index().rename(index=str, columns={'rel_amount': 'std_rel_amount'})
 
     opps = pd.concat([mopps, sopps], axis=1, sort=False).drop_duplicates()
     opps = opps.loc[:, ~opps.columns.duplicated()]
