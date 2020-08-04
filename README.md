@@ -2,17 +2,17 @@
   <a href="https://arxiv.org/abs/1910.11086">ArXiv</a> •
   <a href="https://www.svrhm2019.com/">SVRHM</a> •
     <a href="https://neurips.cc/Conferences/2019/Schedule?showEvent=13196">NeurIPS 2019</a> •
-  <a href="#notebooks">Notebooks</a> •
-  <a href="">Citing</a>
+  <a href="#notebooks">Notebooks</a>
 </p>
 
-# Spatial and Colour Opponency in Anatomically Constrained Deep Networks
+# How Convolutional Neural Network Architecture Biases Learned Opponency and Spectral Tuning
 
 Ethan Harris ([@ethanwharris](https://github.com/ethanwharris)), Daniela Mihai ([@Ddaniela13](https://github.com/Ddaniela13)) and Jonathon Hare ([@jonhare](https://github.com/jonhare))
 
 ## About
 
-This repository contains the code for our paper 'Spatial and Colour Opponency in Anatomically Constrained Deep Networks', accepted to the [NeurIPS 2019](https://neurips.cc/) workshop on [Shared Visual Representations in Humans and Machines (SVRHM)](https://www.svrhm2019.com/).
+This repository contains the code for our paper 'How Convolutional Neural Network Architecture Biases Learned Opponency and Spectral Tuning'
+and a previous version entitled 'Spatial and Colour Opponency in Anatomically Constrained Deep Networks', accepted to the [NeurIPS 2019](https://neurips.cc/) workshop on [Shared Visual Representations in Humans and Machines (SVRHM)](https://www.svrhm2019.com/).
 
 ## Notebooks
 
