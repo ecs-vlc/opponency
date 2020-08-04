@@ -89,7 +89,7 @@ if __name__ == "__main__":
     from statistics.devalois import DeValois
     from statistics.spatial_opponency import SpatialOpponency
     # from orientation import RFOrientation
-    from training.model import BaselineModel
+    from training import BaselineModel
     from training.model_imagenet import ImageNetModel
 
     def file_parse(file):

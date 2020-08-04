@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from model import BaselineModel
+from . import BaselineModel
 
 
 class Flatten(nn.Module):
