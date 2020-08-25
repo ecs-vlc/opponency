@@ -75,7 +75,7 @@ loss_function = nn.CrossEntropyLoss()
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 trial = Trial(model, optimiser, loss_function, metrics=['loss', 'accuracy'], callbacks=[callbacks.CSVLogger(log_file)]).to(device)
-trial.with_generators(trainloader, test_generator=testloader)
+trial.with_generators(trainloader, val_generator=testloader)
 trial.run(epochs=20)
 
 torch.save(model.conv_dict(), model_file)
