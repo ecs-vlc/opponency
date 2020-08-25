@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from . import BaselineModel
+from model import BaselineModel
 
 
 class Flatten(nn.Module):
@@ -33,7 +33,7 @@ class ImageNetModel(BaselineModel):
     :param d_vvs: Depth (nuymber of layers) of the ventral part of the model
     :param n_inch: Number of input channels
     """
-    def __init__(self, n_bn, d_vvs, n_inch=1):
+    def __init__(self, n_bn, d_vvs, n_inch=1, n_classes=1000):
         super(ImageNetModel, self).__init__(n_bn, d_vvs, n_inch)
 
         self.retina = []
@@ -53,7 +53,7 @@ class ImageNetModel(BaselineModel):
         self.ventral.append(("ventral_flatten", Flatten()))
         self.ventral.append(("ventral_fc1", nn.Linear(last_size*32*32, 1024)))
         self.ventral.append(("ventral_fc1_relu", nn.ReLU()))
-        self.ventral.append(("ventral_fc2", nn.Linear(1024, 1000)))
+        self.ventral.append(("ventral_fc2", nn.Linear(1024, n_classes)))
 
         for key, module in self.retina:
                 self.add_module(key, module)
