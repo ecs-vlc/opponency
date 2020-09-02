@@ -8,26 +8,64 @@ from tqdm import tqdm
 
 import os
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-os.sys.path.insert(0,parentdir) 
+os.sys.path.insert(0, parentdir)
 
 from training.model import BaselineModel
 
 
+class WeightInit:
+    def initialise(self, target_model: torch.nn.Module, file: str):
+        raise NotImplementedError
+
+class PreTrained(WeightInit):
+    def initialise(self, target_model: torch.nn.Module, file: str):
+        state_dict = torch.load(file, map_location=next(target_model.parameters()).device)
+        try:
+            target_model.load_conv_dict(state_dict)
+        except:
+            target_model.load_state_dict(state_dict)
+        return target_model
+
+
+class Random(WeightInit):
+    def initialise(self, target_model: torch.nn.Module, file: str):
+        return target_model
+
+
+class Iid(WeightInit):
+    def __init__(self, refrence_model):
+        self.reference_model = refrence_model
+
+    def initialise(self, target_model: torch.nn.Module, file: str):
+        for random_layer, trained_layer in zip(target_model.retina + target_model.ventral, self.reference_model.retina + self.reference_model.ventral):
+            layer_name, random_layer = random_layer
+            _, trained_layer = trained_layer
+            if 'conv' in layer_name:
+                random_layer.weight.data.normal_(mean=trained_layer.weight.mean().item(),
+                                                 std=trained_layer.weight.std().item())
+                if trained_layer.bias.size(0) > 1:
+                    random_layer.bias.data.normal_(mean=trained_layer.bias.mean().item(),
+                                                   std=trained_layer.bias.std().item())
+                else:
+                    random_layer.bias.data.fill_(trained_layer.bias.item())
+        return target_model
+
+
 class ParallelExperimentRunner:
-    def __init__(self, root, file_parse, meter, num_workers, out, model_class=BaselineModel, devices=None, random=False):
+    def __init__(self, root, file_parse, meter, num_workers, out, model_class=BaselineModel, devices=None, weight_init: WeightInit = PreTrained()):
         if devices is None:
             devices = ['cpu', 'cuda:0']
         model_list = glob.glob(os.path.join(root, '*.pt'))
         
         self.model_queue = Queue()
         for model in model_list:
-            self.model_queue.put((model, file_parse(model)))
+            self.model_queue.put((model, file_parse(model.split('/')[-1])))
         self.len = len(model_list)
         self.meter = meter
         self.num_workers = num_workers
         self.out = out
         self.devices = devices
-        self.random = random
+        self.weight_init = weight_init
         self.model_class = model_class
 
     def make_worker(self, progress_bar, sink, device):
@@ -38,13 +76,8 @@ class ParallelExperimentRunner:
                 model_file, metadata = self.model_queue.get()
                 model = self.model_class(metadata['n_bn'], metadata['d_vvs'], metadata['n_ch']).to(device)
 
-                if not self.random:
-                    state_dict = torch.load(model_file, map_location=device)
-                    try:
-                        model.load_conv_dict(state_dict)
-                    except:
-                        model.load_state_dict(state_dict)
-                    # torch.save(model.conv_dict(), model_file)
+                self.weight_init.initialise(model, model_file)
+
                 for param in model.parameters():
                     param.requires_grad = False
                 res = self.meter(model, metadata, device)
@@ -96,5 +129,8 @@ if __name__ == "__main__":
         v = file.split('.')[0].split('_')
         return {'n_bn': int(v[1]), 'd_vvs': int(v[2]), 'rep': int(v[3]), 'n_ch': 3}
 
-    runner = ParallelExperimentRunner('../models/colour-mos', file_parse, SpatialOpponency(), 0, 'spatial-mos.pd', model_class=BaselineModel, devices=['cuda']) #0 to debug
+    reference_model = BaselineModel(32, 4, 3)
+    reference_model = PreTrained().initialise(reference_model, '../../models/colour/model_32_4_0.pt')
+
+    runner = ParallelExperimentRunner('../../models/colour', file_parse, SpatialOpponency(), 0, 'spatial-iid.pd', model_class=BaselineModel, devices=['cuda'], weight_init=Iid(reference_model)) #0 to debug
     runner.run()

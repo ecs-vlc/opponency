@@ -69,7 +69,8 @@ loss_function = nn.CrossEntropyLoss()
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 trial = Trial(model, optimiser, loss_function, metrics=['loss', 'accuracy'],
-              callbacks=[torchbearer.callbacks.csv_logger.CSVLogger(log_file)]).to(device)
+              callbacks=[torchbearer.callbacks.imaging.MakeGrid(num_images=8, pad_value=1).on_train().to_file('svhn_sample.png'),
+                         torchbearer.callbacks.csv_logger.CSVLogger(log_file)]).to(device)
 trial.with_generators(trainloader, val_generator=testloader)
 trial.run(epochs=20)
 torch.save(model.conv_dict(), model_file)

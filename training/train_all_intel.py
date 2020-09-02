@@ -4,6 +4,7 @@ import torch.nn as nn
 """Train a single model
 """
 import torchvision.transforms as transforms
+import torchbearer
 from torchbearer import Trial, callbacks
 from torch import optim
 from torch.utils.data import DataLoader
@@ -74,7 +75,9 @@ optimiser = optim.RMSprop(model.parameters(), alpha=0.9, lr=0.0001, weight_decay
 loss_function = nn.CrossEntropyLoss()
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
-trial = Trial(model, optimiser, loss_function, metrics=['loss', 'accuracy'], callbacks=[callbacks.CSVLogger(log_file)]).to(device)
+trial = Trial(model, optimiser, loss_function, metrics=['loss', 'accuracy'],
+              callbacks=[torchbearer.callbacks.imaging.MakeGrid(num_images=8, pad_value=1, padding=8).on_train().to_file('intel_sample.png'),
+                         callbacks.CSVLogger(log_file)]).to(device)
 trial.with_generators(trainloader, val_generator=testloader)
 trial.run(epochs=20)
 
