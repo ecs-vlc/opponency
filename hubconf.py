@@ -3,7 +3,7 @@ dependencies = ['torch', 'torchvision']
 from torch.hub import load_state_dict_from_url
 
 
-def _baseline_model(mode='colour', pretrained=False, n_bn=32, d_vvs=2, rep=0):
+def _baseline_model(mode='colour', pretrained=True, n_bn=32, d_vvs=2, rep=0):
     from training import BaselineModel
 
     n_inch = 1 if mode == 'grey' else 3
@@ -22,7 +22,7 @@ def _baseline_model(mode='colour', pretrained=False, n_bn=32, d_vvs=2, rep=0):
     return model
 
 
-def _imagenet_model(pretrained=False, n_bn=32, d_vvs=2, rep=0):
+def _imagenet_model(pretrained=True, n_bn=32, d_vvs=2, rep=0):
     from training import ImageNetModel
 
     model = ImageNetModel(n_bn, d_vvs, 3)
